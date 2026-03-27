@@ -1,4 +1,4 @@
-const BASE_URL = "https://mwangazalanguagehub.onrender.com/api";
+const ORIGIN = "https://mwangazalanguagehub.onrender.com";
 
 export async function apiRequest(endpoint, options = {}) {
   const token =
@@ -10,11 +10,15 @@ export async function apiRequest(endpoint, options = {}) {
     ...(options.headers || {}),
   };
 
+  const normalizedEndpoint = endpoint.startsWith("/api")
+    ? endpoint
+    : `/api${endpoint}`;
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
 
   try {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    const response = await fetch(`${ORIGIN}${normalizedEndpoint}`, {
       ...options,
       headers,
       signal: controller.signal,
