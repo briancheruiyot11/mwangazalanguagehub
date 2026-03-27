@@ -23,7 +23,9 @@ def register_user(name, email, password, role="learner"):
     db.session.add(user)
     db.session.commit()
 
-    log_activity(user.id, "User Registered", f"{user.email} registered as {user.role}")
+    # Temporarily disable this line for testing
+    # log_activity(user.id, "User Registered", f"{user.email} registered as {user.role}")
+
     return user, None
 
 
@@ -42,5 +44,7 @@ def authenticate_user(email, password):
         expires_delta=timedelta(days=1),
     )
 
-    log_activity(user.id, "User Logged In", f"{user.email} logged in")
+    # Temporarily disable this line for testing
+    # log_activity(user.id, "User Logged In", f"{user.email} logged in")
+
     return {"token": token, "user": user.to_dict()}, None
