@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:5000/api";
+const BASE_URL = "https://mwangazalanguagehub.onrender.com";
 
 export async function apiRequest(endpoint, options = {}) {
   const token =
@@ -31,14 +31,12 @@ export async function apiRequest(endpoint, options = {}) {
     }
 
     return data;
-
   } catch (error) {
     console.error("API ERROR:", error);
 
-    // 🔥 This is the key fix
     if (error.message === "Failed to fetch") {
       throw new Error(
-        "Cannot connect to server. Make sure backend is running on port 5000."
+        "Cannot connect to server. Check backend URL, CORS, or if Render service is live."
       );
     }
 

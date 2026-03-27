@@ -8,7 +8,11 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(
+        app,
+        resources={r"/api/*": {"origins": ["https://mwangazalanguagehub.vercel.app"]}},
+        supports_credentials=True
+    )
 
     db.init_app(app)
     migrate.init_app(app, db)
