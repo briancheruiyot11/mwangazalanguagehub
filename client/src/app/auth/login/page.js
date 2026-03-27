@@ -30,7 +30,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const data = await apiRequest("/auth/login", {
+      const data = await apiRequest("/api/auth/login", {
         method: "POST",
         body: JSON.stringify(form),
       });
@@ -68,7 +68,6 @@ export default function LoginPage() {
         )}
 
         <form onSubmit={handleLogin}>
-          {/* Email */}
           <div className="mb-4 flex items-center gap-3 rounded-md border border-white/20 bg-white/10 px-4 py-3">
             <Mail size={18} className="text-white/70" />
             <input
@@ -82,7 +81,6 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Password */}
           <div className="mb-6 flex items-center gap-3 rounded-md border border-white/20 bg-white/10 px-4 py-3">
             <Lock size={18} className="text-white/70" />
             <input
@@ -103,7 +101,6 @@ export default function LoginPage() {
             </button>
           </div>
 
-          {/* Login Button */}
           <button
             type="submit"
             disabled={loading}
@@ -113,7 +110,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Sign Up */}
         <p className="mt-6 text-center text-sm text-white/70">
           Don&apos;t have an account?{" "}
           <a
@@ -124,7 +120,6 @@ export default function LoginPage() {
           </a>
         </p>
 
-        {/* Back to Home BUTTON */}
         <div className="mt-4 flex justify-center">
           <button
             onClick={() => router.push("/")}

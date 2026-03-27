@@ -2,26 +2,23 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Mail, Lock, Eye, EyeOff, User, Shield } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { apiRequest } from "@/lib/api";
 
 export default function RegisterPage() {
   const router = useRouter();
 
   const [form, setForm] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     role: "learner",
-    adminSecret: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const ADMIN_SECRET = "Brian124";
 
   const handleChange = (e) => {
     setForm((prev) => ({
@@ -37,48 +34,24 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      if (!form.name || !form.email || !form.password || !form.role) {
-        throw new Error("Please fill in all required fields");
-      }
-
-      if (form.role === "admin" && form.adminSecret !== ADMIN_SECRET) {
-        throw new Error("Invalid admin secret password");
-      }
-
-      const data = await apiRequest("/auth/register", {
+      const data = await apiRequest("/api/auth/register", {
         method: "POST",
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          password: form.password,
-          role: form.role,
-          adminSecret: form.adminSecret,
-        }),
+        body: JSON.stringify(form),
       });
 
-      setSuccess(data.message || "Account created successfully");
-
-      setForm({
-        name: "",
-        email: "",
-        password: "",
-        role: "learner",
-        adminSecret: "",
-      });
-
+      setSuccess(data.message || "Registration successful");
       setTimeout(() => {
         router.push("/auth/login");
-      }, 1200);
+      }, 1500);
     } catch (err) {
       setError(err.message || "Registration failed");
-      console.error("REGISTER ERROR:", err);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#1E3A8A] to-[#0A1A33] px-4 py-10">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#1E3A8A] to-[#0A1A33] px-4">
       <div className="w-full max-w-md rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md shadow-xl p-8">
         <h1 className="text-3xl font-extrabold text-center text-white mb-2">
           Mwangaza Language Hub
@@ -105,9 +78,9 @@ export default function RegisterPage() {
             <User size={18} className="text-white/70" />
             <input
               type="text"
-              name="name"
-              placeholder="Full Name"
-              value={form.name}
+              name="username"
+              placeholder="Username"
+              value={form.username}
               onChange={handleChange}
               required
               className="w-full bg-transparent text-white outline-none placeholder:text-white/50"
@@ -147,7 +120,7 @@ export default function RegisterPage() {
             </button>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-6">
             <select
               name="role"
               value={form.role}
@@ -163,44 +136,31 @@ export default function RegisterPage() {
             </select>
           </div>
 
-          {form.role === "admin" && (
-            <div className="mb-6 flex items-center gap-3 rounded-md border border-white/20 bg-white/10 px-4 py-3">
-              <Shield size={18} className="text-white/70" />
-              <input
-                type="password"
-                name="adminSecret"
-                placeholder="Admin Secret Password"
-                value={form.adminSecret}
-                onChange={handleChange}
-                required
-                className="w-full bg-transparent text-white outline-none placeholder:text-white/50"
-              />
-            </div>
-          )}
-
           <button
             type="submit"
             disabled={loading}
             className="w-full rounded-md bg-white px-4 py-3 font-bold text-[#1E3A8A] transition hover:bg-gray-100 disabled:opacity-50"
           >
-            {loading ? "Creating Account..." : "Sign Up"}
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-white/70">
           Already have an account?{" "}
-          <a href="/auth/login" className="font-semibold text-white hover:underline">
+          <a
+            href="/auth/login"
+            className="font-semibold text-white hover:underline"
+          >
             Login
           </a>
         </p>
 
-        {/* Back to Home BUTTON */}
         <div className="mt-4 flex justify-center">
           <button
             onClick={() => router.push("/")}
             className="px-4 py-2 text-sm font-medium text-white rounded-2xl border border-white/20 bg-white/10 hover:bg-white/20 transition"
           >
-             Back to Home
+            Back to Home
           </button>
         </div>
       </div>
