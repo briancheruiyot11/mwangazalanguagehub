@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, app, jsonify
 from flask_cors import CORS
 
 from config import Config
@@ -40,4 +40,7 @@ def create_app():
     def home():
         return jsonify({"message": "Server is running"})
 
+    with app.app_context():
+        db.create_all()
+    
     return app
