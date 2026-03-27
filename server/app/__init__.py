@@ -12,7 +12,7 @@ def create_app():
         app,
         resources={r"/api/*": {"origins": [
             "https://mwangazalanguagehub.vercel.app",
-            "https://www.mwangazalanguagehub.vercel.app",
+            "https://mwangazalanguagehub-cooapp2c8.vercel.app",
         ]}},
         supports_credentials=True,
         allow_headers=["Content-Type", "Authorization"],
