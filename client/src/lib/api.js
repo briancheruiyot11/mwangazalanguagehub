@@ -1,4 +1,4 @@
-const BASE_URL = "https://mwangazalanguagehub.onrender.com";
+const BASE_URL = "https://mwangazalanguagehub.onrender.com/api";
 
 export async function apiRequest(endpoint, options = {}) {
   const token =
