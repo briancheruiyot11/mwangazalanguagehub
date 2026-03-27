@@ -10,14 +10,19 @@ export async function apiRequest(endpoint, options = {}) {
     ...(options.headers || {}),
   };
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       ...options,
       headers,
+      signal: controller.signal,
     });
 
-    let data;
+    clearTimeout(timeout);
 
+    let data;
     try {
       data = await response.json();
     } catch {
@@ -32,7 +37,14 @@ export async function apiRequest(endpoint, options = {}) {
 
     return data;
   } catch (error) {
+    clearTimeout(timeout);
     console.error("API ERROR:", error);
+
+    if (error.name === "AbortError") {
+      throw new Error(
+        "Request timed out. The server may be waking up — please try again in a moment."
+      );
+    }
 
     if (error.message === "Failed to fetch") {
       throw new Error(

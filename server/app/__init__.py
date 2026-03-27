@@ -1,4 +1,4 @@
-from flask import Flask, app, jsonify
+from flask import Flask, jsonify
 from flask_cors import CORS
 
 from config import Config
@@ -10,8 +10,13 @@ def create_app():
 
     CORS(
         app,
-        resources={r"/api/*": {"origins": ["https://mwangazalanguagehub.vercel.app"]}},
-        supports_credentials=True
+        resources={r"/api/*": {"origins": [
+            "https://mwangazalanguagehub.vercel.app",
+            "https://www.mwangazalanguagehub.vercel.app",
+        ]}},
+        supports_credentials=True,
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )
 
     db.init_app(app)
@@ -42,5 +47,5 @@ def create_app():
 
     with app.app_context():
         db.create_all()
-    
+
     return app
