@@ -2,28 +2,33 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, KeyRound } from "lucide-react";
 import { apiRequest } from "@/lib/api";
 
 export default function RegisterPage() {
   const router = useRouter();
 
   const [form, setForm] = useState({
-    username: "",
+    name: "",
     email: "",
     password: "",
     role: "learner",
+    adminSecret: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showAdminSecret, setShowAdminSecret] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
+      ...(name === "role" && value !== "admin" ? { adminSecret: "" } : {}),
     }));
   };
 
@@ -34,12 +39,23 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
+      const payload =
+        form.role === "admin"
+          ? form
+          : {
+              name: form.name,
+              email: form.email,
+              password: form.password,
+              role: form.role,
+            };
+
       const data = await apiRequest("/api/auth/register", {
         method: "POST",
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
 
       setSuccess(data.message || "Registration successful");
+
       setTimeout(() => {
         router.push("/auth/login");
       }, 1500);
@@ -78,9 +94,9 @@ export default function RegisterPage() {
             <User size={18} className="text-white/70" />
             <input
               type="text"
-              name="username"
-              placeholder="Username"
-              value={form.username}
+              name="name"
+              placeholder="Full Name"
+              value={form.name}
               onChange={handleChange}
               required
               className="w-full bg-transparent text-white outline-none placeholder:text-white/50"
@@ -120,7 +136,7 @@ export default function RegisterPage() {
             </button>
           </div>
 
-          <div className="mb-6">
+          <div className="mb-4">
             <select
               name="role"
               value={form.role}
@@ -135,6 +151,28 @@ export default function RegisterPage() {
               </option>
             </select>
           </div>
+
+          {form.role === "admin" && (
+            <div className="mb-6 flex items-center gap-3 rounded-md border border-white/20 bg-white/10 px-4 py-3">
+              <KeyRound size={18} className="text-white/70" />
+              <input
+                type={showAdminSecret ? "text" : "password"}
+                name="adminSecret"
+                placeholder="Admin Secret"
+                value={form.adminSecret}
+                onChange={handleChange}
+                required
+                className="flex-1 bg-transparent text-white outline-none placeholder:text-white/50"
+              />
+              <button
+                type="button"
+                onClick={() => setShowAdminSecret((prev) => !prev)}
+                className="text-white/70 hover:text-white"
+              >
+                {showAdminSecret ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          )}
 
           <button
             type="submit"
