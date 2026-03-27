@@ -1,0 +1,49 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Environment variables
+.env
+instance/config.py
+
+# Flask instance folder (can contain secrets/db)
+instance/
+
+# Migrations (optional: keep or ignore depending on your choice)
+# If using Flask-Migrate, you can KEEP migrations instead
+#migrations/
+
+# Logs
+*.log
+
+# Database files (if using local SQLite)
+*.db
+*.sqlite3
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Testing cache
+.pytest_cache/
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Temporary files
+*.swp
+*.tmp
